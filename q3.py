@@ -26,7 +26,7 @@ def generate_train_val(x, y, valsize):
      
     num_samples = x.shape[0]
   
-    indices = np.random.Generator(num_samples)
+    indices = np.random.permutation(num_samples)
 
     split_point = int(num_samples * (1 - valsize))
 
