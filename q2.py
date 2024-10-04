@@ -1,7 +1,6 @@
 import numpy as np
 import sklearn.linear_model as skl
 
-from sklearn.linear_model import LogisticRegression
 import pandas as pd
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, roc_auc_score
@@ -55,7 +54,7 @@ def eval_nb(trainx, trainy, testx, testy):
 def eval_lr(trainx, trainy, testx, testy):
     test_prob = np.zeros(testx.shape[0])
     # Initialize the Logistic Regression model without regularization
-    lr_model = LogisticRegression(max_iter=1000, penalty='none', solver='saga')  # No regularization
+    lr_model = skl.LogisticRegression(max_iter=1000, penalty='none', solver='saga')  # No regularization
     
     # Fit the model on the training data
     lr_model.fit(trainx, trainy)
