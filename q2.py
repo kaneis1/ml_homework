@@ -54,7 +54,7 @@ def eval_nb(trainx, trainy, testx, testy):
 def eval_lr(trainx, trainy, testx, testy):
     test_prob = np.zeros(testx.shape[0])
     # Initialize the Logistic Regression model without regularization
-    lr_model = skl.LogisticRegression(max_iter=1000, penalty='None', solver='saga')  # No regularization
+    lr_model = skl.LogisticRegression(max_iter=1000, penalty=None, solver='saga')  # No regularization
     
     # Fit the model on the training data
     lr_model.fit(trainx, trainy)
