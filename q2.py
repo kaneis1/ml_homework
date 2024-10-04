@@ -1,6 +1,6 @@
 import numpy as np
 import sklearn.linear_model as skl
-import matplotlib.pyplot as plt
+
 from sklearn.linear_model import LogisticRegression
 import pandas as pd
 from sklearn.naive_bayes import GaussianNB
@@ -80,97 +80,7 @@ def eval_lr(trainx, trainy, testx, testy):
             "test-acc": test_acc, "test-auc": test_auc,
             "test-prob": test_prob}
 
-def plot_roc_curves(results, title):
-    plt.figure()
-    for label, result in results.items():
-        fpr, tpr, _ = roc_curve(testy, result['test-prob'])
-        roc_auc = auc(fpr, tpr)
-        plt.plot(fpr, tpr, label=f'{label} (AUC = {roc_auc:.2f})')
-    plt.plot([0, 1], [0, 1], 'k--')
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title(title)
-    plt.legend(loc="lower right")
-    plt.show()
 
 
-if __name__ == '__main__':
-    # Load the training and test data
-    train_data = pd.read_csv(train_path, delimiter=' ', header=None, dtype=np.float64).to_numpy()
-    test_data = pd.read_csv(test_path, delimiter=' ', header=None, dtype=np.float64).to_numpy()
-    trainx, trainy = train_data[:, :-1], train_data[:, -1]
-    testx, testy = test_data[:, :-1], test_data[:, -1]
-             
-    trainx_std, testx_std = do_std(trainx, testx)  
-    trainx_nothing, testx_nothing = do_nothing(trainx, testx)
-    trainx_log, testx_log = do_log(trainx, testx)
-    trainx_bin, testx_bin = do_bin(trainx, testx)
-    
-    nb_results_std = eval_nb(trainx_std, trainy, testx_std, testy)
-    nb_results_nothing = eval_nb(trainx_nothing, trainy, testx_nothing, testy)
-    nb_results_log = eval_nb(trainx_log, trainy, testx_log, testy)
-    nb_results_bin = eval_nb(trainx_bin, trainy, testx_bin, testy)
-    
-    
-    
-    results = {
-    'Preprocessing': ['Standardization', 'No Preprocessing', 'Log Transformation', 'Binarization'],
-    'Train Accuracy': [nb_results_std['train-acc'], nb_results_nothing['train-acc'], nb_results_log['train-acc'], nb_results_bin['train-acc']],
-    'Train AUC': [nb_results_std['train-auc'], nb_results_nothing['train-auc'], nb_results_log['train-auc'], nb_results_bin['train-auc']],
-    'Test Accuracy': [nb_results_std['test-acc'], nb_results_nothing['test-acc'], nb_results_log['test-acc'], nb_results_bin['test-acc']],
-    'Test AUC': [nb_results_std['test-auc'], nb_results_nothing['test-auc'], nb_results_log['test-auc'], nb_results_bin['test-auc']]
-        }
-
-    # Convert the dictionary to a DataFrame
-    results_df = pd.DataFrame(results)
-
-    # Print the results in a table format
-    print(results_df.to_string(index=False))          
-    
-    lr_results_std = eval_lr(trainx_std, trainy, testx_std, testy)
-    lr_results_nothing = eval_lr(trainx_nothing, trainy, testx_nothing, testy)
-    lr_results_log = eval_lr(trainx_log, trainy, testx_log, testy)
-    lr_results_bin = eval_lr(trainx_bin, trainy, testx_bin, testy)
-    
-    # Create a DataFrame to store the results
-    results = {
-        'Preprocessing': ['Standardization', 'No Preprocessing', 'Log Transformation', 'Binarization'],
-        'Train Accuracy': [lr_results_std['train-acc'], lr_results_nothing['train-acc'], lr_results_log['train-acc'], lr_results_bin['train-acc']],
-        'Train AUC': [lr_results_std['train-auc'], lr_results_nothing['train-auc'], lr_results_log['train-auc'], lr_results_bin['train-auc']],
-        'Test Accuracy': [lr_results_std['test-acc'], lr_results_nothing['test-acc'], lr_results_log['test-acc'], lr_results_bin['test-acc']],
-        'Test AUC': [lr_results_std['test-auc'], lr_results_nothing['test-auc'], lr_results_log['test-auc'], lr_results_bin['test-auc']]
-    }
-
-    # Convert the dictionary to a DataFrame
-    results_df = pd.DataFrame(results)
-
-    # Print the results in a table format
-    print(results_df.to_string(index=False))  
-    
-    nb_results = {
-    'Standardization': nb_results_std,
-    'No Preprocessing': nb_results_nothing,
-    'Log Transformation': nb_results_log,
-    'Binarization': nb_results_bin
-    }
-    plot_roc_curves(nb_results, 'ROC Curves for Naive Bayes Models')
-    # Plot ROC curves for Logistic Regression models
-    lr_results = {
-        'Standardization': lr_results_std,
-        'No Preprocessing': lr_results_nothing,
-        'Log Transformation': lr_results_log,
-        'Binarization': lr_results_bin
-    }
-    plot_roc_curves(lr_results, 'ROC Curves for Logistic Regression Models')
-
-    # Plot ROC curves for the best Naive Bayes and Logistic Regression models
-    best_nb_result = max(nb_results.values(), key=lambda x: x['test-auc'])
-    best_lr_result = max(lr_results.values(), key=lambda x: x['test-auc'])
-    best_results = {
-        'Best Naive Bayes': best_nb_result,
-        'Best Logistic Regression': best_lr_result
-    }
-    plot_roc_curves(best_results, 'ROC Curves for Best Models')            
+         
                                 
