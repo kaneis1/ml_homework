@@ -151,25 +151,4 @@ def eval_mccv(x, y, valsize, s, logistic):
     return results
 
 
-if __name__ == '__main__':
-    train_path = 'HW2/data/spam.train.dat'
-    test_path = 'HW2/data/spam.test.dat'
-    
-    train_data = pd.read_csv(train_path, delimiter=' ', header=None, dtype=np.float64).to_numpy()
-    test_data = pd.read_csv(test_path, delimiter=' ', header=None, dtype=np.float64).to_numpy()
-    trainx, trainy = train_data[:, :-1], train_data[:, -1]
-    testx, testy = test_data[:, :-1], test_data[:, -1]
-    
-    scaler = StandardScaler()
-    trainx = scaler.fit_transform(trainx)
-    testx = scaler.transform(testx)
-    
-    k_values = [5, 10]
-    alpha_values = np.linspace(0.01, 1.0, 10)
-    
-    # Evaluate models
-    best_ridge_result, best_lasso_result = evaluate_ridge_lasso(trainx, trainy, k_values, alpha_values)
 
-    # Print the best settings
-    print("Best Ridge Result:", best_ridge_result)
-    print("Best Lasso Result:", best_lasso_result)
